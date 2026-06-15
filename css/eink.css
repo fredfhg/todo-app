@@ -1,0 +1,301 @@
+/* ============================================
+   fredd 的个人任务系统 - 电纸书版样式
+   墨水屏适配：灰阶 / 大字体 / 无动画 / 高对比
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 禁止所有动画和过渡 */
+  transition: none !important;
+  animation: none !important;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: auto;
+  /* 防止长按弹出菜单 */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ===== 顶部导航 ===== */
+.header {
+  border-bottom: 2px solid #000;
+  padding: 12px 16px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.header-time {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.nav-btn.active {
+  background: #000;
+  color: #fff;
+}
+
+.nav-btn-icon {
+  padding: 10px 14px;
+  font-size: 18px;
+  margin-left: auto;
+}
+
+/* ===== 日期时间显示 ===== */
+.datetime-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid #666;
+  font-size: 14px;
+  color: #333;
+}
+
+.datetime-bar .date {
+  font-weight: 600;
+}
+
+.datetime-bar .count {
+  font-size: 13px;
+  color: #666;
+}
+
+/* ===== 任务卡片网格 ===== */
+.task-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.task-card {
+  border: 2px solid #333;
+  padding: 14px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.task-card.completed {
+  border-color: #999;
+}
+
+.task-card.completed .task-card-title {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.task-card.completed .task-card-meta {
+  color: #aaa;
+}
+
+/* 任务卡片头部：复选框 + 标题 */
+.task-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.eink-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  /* 扩大点击区域但保持视觉大小 */
+  padding: 10px;
+  margin: -10px;
+  margin-right: 0;
+}
+
+.eink-checkbox.checked {
+  background: #000;
+}
+
+.eink-checkbox.checked::after {
+  content: '\2713';
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.task-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  word-break: break-word;
+  flex: 1;
+}
+
+/* 任务卡片标签 */
+.task-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.eink-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid #000;
+}
+
+.eink-tag.priority-urgent {
+  background: #000;
+  color: #fff;
+}
+
+.eink-tag.priority-high {
+  background: #444;
+  color: #fff;
+}
+
+.eink-tag.priority-medium {
+  background: #fff;
+  color: #000;
+}
+
+.eink-tag.priority-low {
+  background: #fff;
+  color: #666;
+  border-color: #666;
+}
+
+.eink-tag.category {
+  border-style: dashed;
+}
+
+/* 任务卡片底部元信息 */
+.task-card-meta {
+  font-size: 13px;
+  color: #555;
+  margin-top: auto;
+}
+
+.task-card-meta.overdue {
+  font-weight: 700;
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ===== 空状态 ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.empty-state .icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* ===== 隐藏类 ===== */
+.hidden {
+  display: none !important;
+}
+
+/* ===== 底部状态栏 ===== */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #666;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #666;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  margin-right: 6px;
+}
+
+.status-dot.connected {
+  background: #000;
+}
+
+/* ===== 加载状态 ===== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* ===== 单列模式（窄屏） ===== */
+@media (max-width: 500px) {
+  .task-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .task-card-title {
+    font-size: 16px;
+  }
+}

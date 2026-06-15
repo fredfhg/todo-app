@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fredd的个人任务系统</title>
+  <link rel="stylesheet" href="css/desktop.css">
+</head>
+<body>
+  <div class="app-layout" id="appLayout">
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>fredd的个人任务系统</h1>
+        <p>管理你的待办事项</p>
+      </div>
+
+      <nav class="nav-section">
+        <div class="nav-section-title">视图</div>
+        <div class="nav-item active" data-view="tasks" onclick="switchView('tasks')">
+          <span class="icon">&#9776;</span>
+          <span>任务</span>
+          <span class="badge" id="taskCount">0</span>
+        </div>
+        <div class="nav-item" data-view="archived" onclick="switchView('archived')">
+          <span class="icon">&#128451;</span>
+          <span>归档</span>
+          <span class="badge" id="archiveCount">0</span>
+        </div>
+      </nav>
+
+      <nav class="nav-section">
+        <div class="nav-section-title">分类</div>
+        <div class="nav-item" data-category="all" onclick="filterCategory('all')">
+          <span class="icon">&#9679;</span>
+          <span>全部</span>
+        </div>
+        <div class="nav-item" data-category="work" onclick="filterCategory('work')">
+          <span class="icon" style="color:#4A9EFF">&#9679;</span>
+          <span>工作</span>
+        </div>
+        <div class="nav-item" data-category="dev" onclick="filterCategory('dev')">
+          <span class="icon" style="color:#10B981">&#9679;</span>
+          <span>开发</span>
+        </div>
+        <div class="nav-item" data-category="team" onclick="filterCategory('team')">
+          <span class="icon" style="color:#8B5CF6">&#9679;</span>
+          <span>团队</span>
+        </div>
+        <div class="nav-item" data-category="finance" onclick="filterCategory('finance')">
+          <span class="icon" style="color:#F59E0B">&#9679;</span>
+          <span>财务</span>
+        </div>
+        <div class="nav-item" data-category="ops" onclick="filterCategory('ops')">
+          <span class="icon" style="color:#EF4444">&#9679;</span>
+          <span>运营</span>
+        </div>
+        <div class="nav-item" data-category="design" onclick="filterCategory('design')">
+          <span class="icon" style="color:#EC4899">&#9679;</span>
+          <span>设计</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- 中间任务列表 -->
+    <main class="main-content">
+      <div class="main-header">
+        <h2 id="viewTitle">任务</h2>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openCreateModal()">+ 新建任务</button>
+        </div>
+      </div>
+
+      <!-- 快速添加 -->
+      <div class="quick-add">
+        <div class="quick-add-input">
+          <span class="icon">+</span>
+          <input type="text" id="quickAddInput" placeholder="快速添加任务，回车确认..." onkeydown="handleQuickAdd(event)">
+        </div>
+      </div>
+
+      <!-- 任务列表 -->
+      <div class="task-list-container" id="taskListContainer">
+        <!-- 高优先级组 -->
+        <div class="task-group" id="highPriorityGroup">
+          <div class="task-group-header">
+            <span>&#9650; 高优先级</span>
+            <span class="count" id="highCount">0</span>
+          </div>
+          <div class="task-group-list" id="highPriorityList"></div>
+        </div>
+
+        <!-- 稍后组 -->
+        <div class="task-group" id="laterGroup">
+          <div class="task-group-header">
+            <span>&#9660; 稍后</span>
+            <span class="count" id="laterCount">0</span>
+          </div>
+          <div class="task-group-list" id="laterList"></div>
+        </div>
+
+        <!-- 空状态 -->
+        <div class="empty-state hidden" id="emptyState">
+          <div class="icon">&#128203;</div>
+          <p>暂无任务，点击上方「新建任务」开始</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- 右侧编辑面板 -->
+    <aside class="detail-panel" id="detailPanel">
+      <div class="detail-header">
+        <h3>编辑任务</h3>
+        <button class="detail-close" onclick="closeDetailPanel()">&times;</button>
+      </div>
+
+      <div class="detail-body">
+        <input type="hidden" id="editId">
+
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" class="form-input" id="editTitle" placeholder="任务标题">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">描述</label>
+          <textarea class="form-textarea" id="editDesc" placeholder="添加详细描述..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">状态</label>
+            <div class="status-toggle" id="editStatusToggle" onclick="toggleEditStatus()">
+              <span class="status-dot active" id="editStatusDot"></span>
+              <span id="editStatusText">进行中</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">截止时间</label>
+            <input type="datetime-local" class="form-input" id="editDueDate">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">优先级</label>
+            <select class="form-select" id="editPriority">
+              <option value="urgent">紧急</option>
+              <option value="high">高优</option>
+              <option value="medium">中优</option>
+              <option value="low">低优</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">分类</label>
+            <select class="form-select" id="editCategory">
+              <option value="work">工作</option>
+              <option value="dev">开发</option>
+              <option value="team">团队</option>
+              <option value="finance">财务</option>
+              <option value="ops">运营</option>
+              <option value="design">设计</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">子任务</label>
+          <div class="subtask-list" id="editSubtasks"></div>
+          <div class="subtask-add">
+            <input type="text" id="subtaskInput" placeholder="添加子任务..." onkeydown="handleAddSubtask(event)">
+            <button class="btn btn-sm btn-ghost" onclick="addSubtask()">添加</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-footer">
+        <button class="btn btn-primary" onclick="saveTask()" style="flex:1">保存</button>
+        <button class="btn btn-ghost" onclick="archiveCurrentTask()">&#128451; 归档</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurrentTask()">&#128465;</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 创建任务弹窗 -->
+  <div class="modal-overlay hidden" id="createModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>新建任务</h3>
+        <button class="detail-close" onclick="closeCreateModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" class="form-input" id="createTitle" placeholder="任务标题" autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label">描述</label>
+          <textarea class="form-textarea" id="createDesc" placeholder="添加详细描述..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">优先级</label>
+            <select class="form-select" id="createPriority">
+              <option value="urgent">紧急</option>
+              <option value="high">高优</option>
+              <option value="medium" selected>中优</option>
+              <option value="low">低优</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">分类</label>
+            <select class="form-select" id="createCategory">
+              <option value="work" selected>工作</option>
+              <option value="dev">开发</option>
+              <option value="team">团队</option>
+              <option value="finance">财务</option>
+              <option value="ops">运营</option>
+              <option value="design">设计</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">截止时间</label>
+          <input type="datetime-local" class="form-input" id="createDueDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeCreateModal()">取消</button>
+        <button class="btn btn-primary" onclick="createTask()">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 连接状态 -->
+  <div class="connection-status">
+    <span class="connection-dot" id="connectionDot"></span>
+    <span id="connectionText">已连接</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/desktop-app.js"></script>
+</body>
+</html>
