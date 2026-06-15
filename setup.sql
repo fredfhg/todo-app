@@ -50,16 +50,16 @@ CREATE INDEX idx_todos_due_date ON todos(due_date);
 ALTER TABLE todos ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow public read" ON todos
-  FOR SELECT USING (true);
+  FOR SELECT TO anon, authenticated USING (true);
 
 CREATE POLICY "Allow public insert" ON todos
-  FOR INSERT WITH CHECK (true);
+  FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 CREATE POLICY "Allow public update" ON todos
-  FOR UPDATE USING (true) WITH CHECK (true);
+  FOR UPDATE TO anon, authenticated USING (true) WITH CHECK (true);
 
 CREATE POLICY "Allow public delete" ON todos
-  FOR DELETE USING (true);
+  FOR DELETE TO anon, authenticated USING (true);
 
 -- 开启实时推送（Realtime）
 ALTER PUBLICATION supabase_realtime ADD TABLE todos;

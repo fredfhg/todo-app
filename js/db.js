@@ -3,8 +3,8 @@
  * 提供 CRUD 操作和实时订阅功能
  */
 
-// 初始化 Supabase 客户端
-const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+// 初始化 Supabase 客户端（使用不同变量名避免与全局 window.supabase 冲突）
+const supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
 // 优先级配置
 const PRIORITIES = {
@@ -38,7 +38,7 @@ const TodoDB = {
    * @returns {Promise<Array>} 任务列表
    */
   async fetchTodos(filters = {}) {
-    let query = supabase
+    let query = supabaseClient
       .from('todos')
       .select('*');
 
@@ -88,7 +88,7 @@ const TodoDB = {
       sort_order: todo.sort_order || 0
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('todos')
       .insert(newTodo)
       .select()
@@ -108,7 +108,7 @@ const TodoDB = {
    * @returns {Promise<Object|null>} 更新后的任务
    */
   async updateTodo(id, updates) {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('todos')
       .update(updates)
       .eq('id', id)
@@ -149,7 +149,7 @@ const TodoDB = {
    * @returns {Promise<boolean>}
    */
   async deleteTodo(id) {
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('todos')
       .delete()
       .eq('id', id);
@@ -168,7 +168,7 @@ const TodoDB = {
    */
   async updateSortOrder(items) {
     const promises = items.map(item =>
-      supabase
+      supabaseClient
         .from('todos')
         .update({ sort_order: item.sort_order })
         .eq('id', item.id)
@@ -191,7 +191,7 @@ const TodoDB = {
    * @returns {Function} 取消订阅函数
    */
   subscribe(onInsert, onUpdate, onDelete) {
-    const channel = supabase
+    const channel = supabaseClient
       .channel('todos-realtime')
       .on('postgres_changes', {
         event: 'INSERT',
@@ -218,7 +218,7 @@ const TodoDB = {
 
     // 返回取消订阅函数
     return () => {
-      supabase.removeChannel(channel);
+      supabaseClient.removeChannel(channel);
     };
   }
 };
