@@ -16,12 +16,9 @@ const PRIORITIES = {
 
 // 分类配置
 const CATEGORIES = {
+  family:  { label: '家庭', emoji: '🏠', color: '#F59E0B' },
   work:    { label: '工作', emoji: '💼', color: '#4A9EFF' },
-  dev:     { label: '开发', emoji: '💻', color: '#10B981' },
-  team:    { label: '团队', emoji: '👥', color: '#8B5CF6' },
-  finance: { label: '财务', emoji: '💰', color: '#F59E0B' },
-  ops:     { label: '运营', emoji: '📊', color: '#EF4444' },
-  design:  { label: '设计', emoji: '🎨', color: '#EC4899' },
+  personal:{ label: '个人', emoji: '🧑', color: '#10B981' },
   other:   { label: '其他', emoji: '📌', color: '#6B7280' }
 };
 

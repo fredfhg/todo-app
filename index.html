@@ -38,29 +38,21 @@
           <span class="icon">📋</span>
           <span>全部</span>
         </div>
+        <div class="nav-item" data-category="family" onclick="filterCategory('family')">
+          <span class="icon">🏠</span>
+          <span>家庭</span>
+        </div>
         <div class="nav-item" data-category="work" onclick="filterCategory('work')">
           <span class="icon">💼</span>
           <span>工作</span>
         </div>
-        <div class="nav-item" data-category="dev" onclick="filterCategory('dev')">
-          <span class="icon">💻</span>
-          <span>开发</span>
+        <div class="nav-item" data-category="personal" onclick="filterCategory('personal')">
+          <span class="icon">🧑</span>
+          <span>个人</span>
         </div>
-        <div class="nav-item" data-category="team" onclick="filterCategory('team')">
-          <span class="icon">👥</span>
-          <span>团队</span>
-        </div>
-        <div class="nav-item" data-category="finance" onclick="filterCategory('finance')">
-          <span class="icon">💰</span>
-          <span>财务</span>
-        </div>
-        <div class="nav-item" data-category="ops" onclick="filterCategory('ops')">
-          <span class="icon">📊</span>
-          <span>运营</span>
-        </div>
-        <div class="nav-item" data-category="design" onclick="filterCategory('design')">
-          <span class="icon">🎨</span>
-          <span>设计</span>
+        <div class="nav-item" data-category="other" onclick="filterCategory('other')">
+          <span class="icon">📌</span>
+          <span>其他</span>
         </div>
       </nav>
     </aside>
@@ -157,12 +149,9 @@
           <div class="form-group">
             <label class="form-label">分类</label>
             <select class="form-select" id="editCategory">
+              <option value="family">🏠 家庭</option>
               <option value="work">💼 工作</option>
-              <option value="dev">💻 开发</option>
-              <option value="team">👥 团队</option>
-              <option value="finance">💰 财务</option>
-              <option value="ops">📊 运营</option>
-              <option value="design">🎨 设计</option>
+              <option value="personal">🧑 个人</option>
               <option value="other">📌 其他</option>
             </select>
           </div>
@@ -215,12 +204,9 @@
           <div class="form-group">
             <label class="form-label">分类</label>
             <select class="form-select" id="createCategory">
+              <option value="family">🏠 家庭</option>
               <option value="work" selected>💼 工作</option>
-              <option value="dev">💻 开发</option>
-              <option value="team">👥 团队</option>
-              <option value="finance">💰 财务</option>
-              <option value="ops">📊 运营</option>
-              <option value="design">🎨 设计</option>
+              <option value="personal">🧑 个人</option>
               <option value="other">📌 其他</option>
             </select>
           </div>
