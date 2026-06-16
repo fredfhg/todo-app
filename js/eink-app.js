@@ -90,8 +90,8 @@ function renderCards() {
  */
 function renderCard(todo) {
   const isCompleted = todo.status === 'completed';
-  const priorityLabel = PRIORITIES[todo.priority]?.label || '';
-  const categoryLabel = CATEGORIES[todo.category]?.label || '';
+  const priorityConf = PRIORITIES[todo.priority] || {};
+  const categoryConf = CATEGORIES[todo.category] || {};
   const dueText = TodoUtils.formatDate(todo.due_date);
   const isOverdue = todo.due_date && new Date(todo.due_date) < new Date() && !isCompleted;
 
@@ -103,8 +103,8 @@ function renderCard(todo) {
         <span class="task-card-title">${escapeHtml(todo.title)}</span>
       </div>
       <div class="task-card-tags">
-        <span class="eink-tag priority-${todo.priority}">${priorityLabel}</span>
-        <span class="eink-tag category">${categoryLabel}</span>
+        <span class="eink-tag priority-${todo.priority}">${priorityConf.emoji || ''} ${priorityConf.label || ''}</span>
+        <span class="eink-tag category">${categoryConf.emoji || ''} ${categoryConf.label || ''}</span>
       </div>
       ${dueText ? `<div class="task-card-meta ${isOverdue ? 'overdue' : ''}">${isOverdue ? '&#9888; ' : ''}${dueText}</div>` : ''}
     </div>

@@ -140,8 +140,8 @@ function renderArchivedView() {
 function renderTaskItem(todo) {
   const isCompleted = todo.status === 'completed';
   const isActive = state.selectedTodoId === todo.id;
-  const priorityLabel = PRIORITIES[todo.priority]?.label || '';
-  const categoryLabel = CATEGORIES[todo.category]?.label || '';
+  const priorityConf = PRIORITIES[todo.priority] || {};
+  const categoryConf = CATEGORIES[todo.category] || {};
   const dueText = TodoUtils.formatDate(todo.due_date);
   const isOverdue = todo.due_date && new Date(todo.due_date) < new Date() && !isCompleted;
 
@@ -156,9 +156,9 @@ function renderTaskItem(todo) {
       <div class="task-info">
         <div class="task-title">${escapeHtml(todo.title)}</div>
         <div class="task-meta">
-          <span class="task-tag tag-priority ${todo.priority}">${priorityLabel}</span>
-          <span class="task-tag tag-category">${categoryLabel}</span>
-          ${dueText ? `<span class="task-tag tag-due ${isOverdue ? 'overdue' : ''}">${dueText}</span>` : ''}
+          <span class="task-tag tag-priority ${todo.priority}">${priorityConf.emoji || ''} ${priorityConf.label || ''}</span>
+          <span class="task-tag tag-category">${categoryConf.emoji || ''} ${categoryConf.label || ''}</span>
+          ${dueText ? `<span class="task-tag tag-due ${isOverdue ? 'overdue' : ''}">📅 ${dueText}</span>` : ''}
         </div>
       </div>
     </div>

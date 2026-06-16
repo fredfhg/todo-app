@@ -8,21 +8,21 @@ const supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABAS
 
 // 优先级配置
 const PRIORITIES = {
-  urgent: { label: '紧急', order: 0 },
-  high: { label: '高优', order: 1 },
-  medium: { label: '中优', order: 2 },
-  low: { label: '低优', order: 3 }
+  urgent: { label: '紧急', emoji: '🔴', order: 0 },
+  high:   { label: '高优', emoji: '🟠', order: 1 },
+  medium: { label: '中优', emoji: '🔵', order: 2 },
+  low:    { label: '低优', emoji: '⚪', order: 3 }
 };
 
 // 分类配置
 const CATEGORIES = {
-  work: { label: '工作', color: '#4A9EFF' },
-  dev: { label: '开发', color: '#10B981' },
-  team: { label: '团队', color: '#8B5CF6' },
-  finance: { label: '财务', color: '#F59E0B' },
-  ops: { label: '运营', color: '#EF4444' },
-  design: { label: '设计', color: '#EC4899' },
-  other: { label: '其他', color: '#6B7280' }
+  work:    { label: '工作', emoji: '💼', color: '#4A9EFF' },
+  dev:     { label: '开发', emoji: '💻', color: '#10B981' },
+  team:    { label: '团队', emoji: '👥', color: '#8B5CF6' },
+  finance: { label: '财务', emoji: '💰', color: '#F59E0B' },
+  ops:     { label: '运营', emoji: '📊', color: '#EF4444' },
+  design:  { label: '设计', emoji: '🎨', color: '#EC4899' },
+  other:   { label: '其他', emoji: '📌', color: '#6B7280' }
 };
 
 /**

@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fredd的个人任务系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/desktop.css">
 </head>
 <body>
@@ -32,31 +35,31 @@
       <nav class="nav-section">
         <div class="nav-section-title">分类</div>
         <div class="nav-item" data-category="all" onclick="filterCategory('all')">
-          <span class="icon">&#9679;</span>
+          <span class="icon">📋</span>
           <span>全部</span>
         </div>
         <div class="nav-item" data-category="work" onclick="filterCategory('work')">
-          <span class="icon" style="color:#4A9EFF">&#9679;</span>
+          <span class="icon">💼</span>
           <span>工作</span>
         </div>
         <div class="nav-item" data-category="dev" onclick="filterCategory('dev')">
-          <span class="icon" style="color:#10B981">&#9679;</span>
+          <span class="icon">💻</span>
           <span>开发</span>
         </div>
         <div class="nav-item" data-category="team" onclick="filterCategory('team')">
-          <span class="icon" style="color:#8B5CF6">&#9679;</span>
+          <span class="icon">👥</span>
           <span>团队</span>
         </div>
         <div class="nav-item" data-category="finance" onclick="filterCategory('finance')">
-          <span class="icon" style="color:#F59E0B">&#9679;</span>
+          <span class="icon">💰</span>
           <span>财务</span>
         </div>
         <div class="nav-item" data-category="ops" onclick="filterCategory('ops')">
-          <span class="icon" style="color:#EF4444">&#9679;</span>
+          <span class="icon">📊</span>
           <span>运营</span>
         </div>
         <div class="nav-item" data-category="design" onclick="filterCategory('design')">
-          <span class="icon" style="color:#EC4899">&#9679;</span>
+          <span class="icon">🎨</span>
           <span>设计</span>
         </div>
       </nav>
@@ -145,22 +148,22 @@
           <div class="form-group">
             <label class="form-label">优先级</label>
             <select class="form-select" id="editPriority">
-              <option value="urgent">紧急</option>
-              <option value="high">高优</option>
-              <option value="medium">中优</option>
-              <option value="low">低优</option>
+              <option value="urgent">🔴 紧急</option>
+              <option value="high">🟠 高优</option>
+              <option value="medium">🔵 中优</option>
+              <option value="low">⚪ 低优</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">分类</label>
             <select class="form-select" id="editCategory">
-              <option value="work">工作</option>
-              <option value="dev">开发</option>
-              <option value="team">团队</option>
-              <option value="finance">财务</option>
-              <option value="ops">运营</option>
-              <option value="design">设计</option>
-              <option value="other">其他</option>
+              <option value="work">💼 工作</option>
+              <option value="dev">💻 开发</option>
+              <option value="team">👥 团队</option>
+              <option value="finance">💰 财务</option>
+              <option value="ops">📊 运营</option>
+              <option value="design">🎨 设计</option>
+              <option value="other">📌 其他</option>
             </select>
           </div>
         </div>
@@ -203,22 +206,22 @@
           <div class="form-group">
             <label class="form-label">优先级</label>
             <select class="form-select" id="createPriority">
-              <option value="urgent">紧急</option>
-              <option value="high">高优</option>
-              <option value="medium" selected>中优</option>
-              <option value="low">低优</option>
+              <option value="urgent">🔴 紧急</option>
+              <option value="high">🟠 高优</option>
+              <option value="medium" selected>🔵 中优</option>
+              <option value="low">⚪ 低优</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">分类</label>
             <select class="form-select" id="createCategory">
-              <option value="work" selected>工作</option>
-              <option value="dev">开发</option>
-              <option value="team">团队</option>
-              <option value="finance">财务</option>
-              <option value="ops">运营</option>
-              <option value="design">设计</option>
-              <option value="other">其他</option>
+              <option value="work" selected>💼 工作</option>
+              <option value="dev">💻 开发</option>
+              <option value="team">👥 团队</option>
+              <option value="finance">💰 财务</option>
+              <option value="ops">📊 运营</option>
+              <option value="design">🎨 设计</option>
+              <option value="other">📌 其他</option>
             </select>
           </div>
         </div>
