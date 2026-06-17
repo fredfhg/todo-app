@@ -91,7 +91,18 @@ function renderList() {
   grid.classList.remove('hidden');
   emptyState.classList.add('hidden');
 
-  // 分组渲染：保持API返回的原始排序（sort_order ASC, created_at DESC），与PC版一致
+  // 排序逻辑与PC版 groupByPriority 一致：sort_order ASC, due_date ASC
+  function sortItems(a, b) {
+    var orderDiff = (a.sort_order || 0) - (b.sort_order || 0);
+    if (orderDiff !== 0) return orderDiff;
+    var dateA = a.due_date || '9999-12-31';
+    var dateB = b.due_date || '9999-12-31';
+    if (dateA < dateB) return -1;
+    if (dateA > dateB) return 1;
+    return 0;
+  }
+
+  // 分组：活跃在前，已完成在后；每组内按 sort_order + due_date 排序
   var activeItems = [];
   var completedItems = [];
   for (var i = 0; i < einkState.todos.length; i++) {
@@ -101,6 +112,8 @@ function renderList() {
       activeItems.push(einkState.todos[i]);
     }
   }
+  activeItems.sort(sortItems);
+  completedItems.sort(sortItems);
 
   var html = '';
 
