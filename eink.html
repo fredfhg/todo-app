@@ -10,30 +10,30 @@
   <!-- 顶部导航 -->
   <header class="header">
     <div class="header-top">
-      <span class="header-title">fredd的任务</span>
+      <span class="header-title">我的任务</span>
       <span class="header-time" id="headerTime"></span>
     </div>
     <nav class="header-nav">
-      <button class="nav-btn active" id="btnTasks" onclick="switchView('tasks')">任务</button>
+      <button class="nav-btn active" id="btnTasks" onclick="switchView('tasks')">待办</button>
       <button class="nav-btn" id="btnArchived" onclick="switchView('archived')">归档</button>
-      <button class="nav-btn nav-btn-icon" onclick="refreshData()" title="刷新">&#8635;</button>
+      <button class="nav-btn nav-btn-icon" onclick="refreshData()" title="刷新">↻</button>
     </nav>
   </header>
 
-  <!-- 日期时间栏 -->
+  <!-- 日期信息栏 -->
   <div class="datetime-bar">
     <span class="date" id="currentDate"></span>
     <span class="count" id="todoCount"></span>
   </div>
 
-  <!-- 任务卡片网格 -->
+  <!-- 任务列表 -->
   <div class="task-grid" id="taskGrid">
     <div class="loading">加载中...</div>
   </div>
 
   <!-- 空状态 -->
   <div class="empty-state hidden" id="emptyState">
-    <div class="icon">&#9744;</div>
+    <div class="icon">☐</div>
     <p>暂无任务</p>
   </div>
 
@@ -43,7 +43,7 @@
     <span id="lastSync"></span>
   </div>
 
-  <!-- Scripts（电纸书专用轻量版，不依赖 Supabase SDK，兼容 Android 8.1） -->
+  <!-- Scripts -->
   <script src="js/eink-db.js"></script>
   <script src="js/eink-app.js"></script>
 </body>
