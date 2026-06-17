@@ -48,11 +48,20 @@ export async function onRequest(context) {
       });
     }
 
+    // 读取请求体（避免 stream 转发时丢失 body 的问题）
+    let body = undefined;
+    if (!['GET', 'HEAD'].includes(request.method)) {
+      body = await request.text();
+      if (body) {
+        headers.set('Content-Length', new TextEncoder().encode(body).length.toString());
+      }
+    }
+
     // 普通 HTTP 请求转发
     const response = await fetch(targetUrl, {
       method: request.method,
       headers,
-      body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
+      body,
       redirect: 'follow',
     });
 
