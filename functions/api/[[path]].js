@@ -52,7 +52,9 @@ export async function onRequest(context) {
     let body = undefined;
     if (!['GET', 'HEAD'].includes(request.method)) {
       body = await request.text();
-      if (body) {
+      if (!body || body.length === 0) {
+        body = undefined; // 真正的空 body，不传递
+      } else {
         headers.set('Content-Length', new TextEncoder().encode(body).length.toString());
       }
     }

@@ -54,7 +54,7 @@ const TodoDB = {
       query = query.eq('status', filters.status);
     }
 
-    // 排序：优先级 → sort_order → 截止时间 → 创建时间
+    // 排序：sort_order → 创建时间
     query = query
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
@@ -62,7 +62,7 @@ const TodoDB = {
     const { data, error } = await query;
     if (error) {
       console.error('获取任务失败:', error);
-      return [];
+      throw new Error('获取任务失败: ' + (error.message || JSON.stringify(error)));
     }
     return data || [];
   },
@@ -93,7 +93,7 @@ const TodoDB = {
 
     if (error) {
       console.error('创建任务失败:', error);
-      return null;
+      throw new Error(error.message || error.code || JSON.stringify(error));
     }
     return data;
   },
@@ -114,7 +114,7 @@ const TodoDB = {
 
     if (error) {
       console.error('更新任务失败:', error);
-      return null;
+      throw new Error(error.message || error.code || JSON.stringify(error));
     }
     return data;
   },

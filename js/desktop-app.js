@@ -16,6 +16,18 @@ const state = {
 const dom = {};
 
 /**
+ * 更新连接状态显示
+ */
+function updateConnection(connected) {
+  if (dom.connectionDot) {
+    dom.connectionDot.className = 'connection-dot ' + (connected ? 'connected' : 'disconnected');
+  }
+  if (dom.connectionText) {
+    dom.connectionText.textContent = connected ? '已连接' : '未连接';
+  }
+}
+
+/**
  * 初始化应用
  */
 async function initApp() {
@@ -27,6 +39,7 @@ async function initApp() {
   } catch (e) {
     console.error('初始化加载失败:', e);
     updateConnection(false);
+    showToast('初始化失败：' + (e.message || String(e)), 'error');
   }
 }
 
@@ -59,9 +72,14 @@ async function loadTodos() {
     filters.category = state.currentCategory;
   }
 
-  state.todos = await TodoDB.fetchTodos(filters);
-  renderTodos();
-  updateCounts();
+  try {
+    state.todos = await TodoDB.fetchTodos(filters);
+    renderTodos();
+    updateCounts();
+  } catch (e) {
+    console.error('loadTodos error:', e);
+    showToast('加载任务失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -189,13 +207,17 @@ function renderTaskItem(todo) {
  * 更新计数
  */
 async function updateCounts() {
-  // 获取活跃任务数
-  const activeTodos = await TodoDB.fetchTodos({ archived: false });
-  dom.taskCount.textContent = activeTodos.length;
+  try {
+    // 获取活跃任务数
+    const activeTodos = await TodoDB.fetchTodos({ archived: false });
+    dom.taskCount.textContent = activeTodos.length;
 
-  // 获取归档任务数
-  const archivedTodos = await TodoDB.fetchTodos({ archived: true });
-  dom.archiveCount.textContent = archivedTodos.length;
+    // 获取归档任务数
+    const archivedTodos = await TodoDB.fetchTodos({ archived: true });
+    dom.archiveCount.textContent = archivedTodos.length;
+  } catch (e) {
+    console.error('updateCounts error:', e);
+  }
 }
 
 /**
@@ -373,8 +395,18 @@ async function saveTask() {
     return;
   }
 
-  await TodoDB.updateTodo(id, updates);
-  await loadTodos();
+  try {
+    const result = await TodoDB.updateTodo(id, updates);
+    if (result) {
+      showToast('保存成功', 'success');
+    } else {
+      showToast('保存失败：未知错误', 'error');
+    }
+    await loadTodos();
+  } catch (e) {
+    console.error('saveTask error:', e);
+    showToast('保存失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -383,10 +415,15 @@ async function saveTask() {
 async function archiveCurrentTask() {
   if (!state.selectedTodoId) return;
   const isArchived = state.currentView === 'archived';
-  await TodoDB.archiveTodo(state.selectedTodoId, !isArchived);
-  closeDetailPanel();
-  await loadTodos();
-  updateCounts();
+  try {
+    await TodoDB.archiveTodo(state.selectedTodoId, !isArchived);
+    showToast(isArchived ? '已取消归档' : '已归档', 'success');
+    closeDetailPanel();
+    await loadTodos();
+    updateCounts();
+  } catch (e) {
+    showToast('操作失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -396,10 +433,19 @@ async function deleteCurrentTask() {
   if (!state.selectedTodoId) return;
   if (!confirm('确定要删除这个任务吗？此操作不可恢复。')) return;
 
-  await TodoDB.deleteTodo(state.selectedTodoId);
-  closeDetailPanel();
-  await loadTodos();
-  updateCounts();
+  try {
+    const success = await TodoDB.deleteTodo(state.selectedTodoId);
+    if (success) {
+      showToast('任务已删除', 'success');
+    } else {
+      showToast('删除失败', 'error');
+    }
+    closeDetailPanel();
+    await loadTodos();
+    updateCounts();
+  } catch (e) {
+    showToast('删除失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -417,8 +463,12 @@ function closeDetailPanel() {
  * 切换任务状态（从列表中快速切换）
  */
 async function toggleTodoStatus(id, currentStatus) {
-  await TodoDB.toggleStatus(id, currentStatus);
-  await loadTodos();
+  try {
+    await TodoDB.toggleStatus(id, currentStatus);
+    await loadTodos();
+  } catch (e) {
+    showToast('状态切换失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -430,10 +480,20 @@ async function handleQuickAdd(event) {
   const title = input.value.trim();
   if (!title) return;
 
-  await TodoDB.createTodo({ title, priority: 'medium', category: 'work' });
-  input.value = '';
-  await loadTodos();
-  updateCounts();
+  try {
+    const result = await TodoDB.createTodo({ title, priority: 'medium', category: 'work' });
+    if (result) {
+      showToast('任务创建成功', 'success');
+      input.value = '';
+      await loadTodos();
+      updateCounts();
+    } else {
+      showToast('创建失败：未知错误（返回为空）', 'error');
+    }
+  } catch (e) {
+    console.error('handleQuickAdd error:', e);
+    showToast('创建失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -468,10 +528,20 @@ async function createTask() {
     due_date: document.getElementById('createDueDate').value || null
   };
 
-  await TodoDB.createTodo(todo);
-  closeCreateModal();
-  await loadTodos();
-  updateCounts();
+  try {
+    const result = await TodoDB.createTodo(todo);
+    if (result) {
+      showToast('任务创建成功', 'success');
+      closeCreateModal();
+      await loadTodos();
+      updateCounts();
+    } else {
+      showToast('创建失败：未知错误（返回为空）', 'error');
+    }
+  } catch (e) {
+    console.error('createTask error:', e);
+    showToast('创建失败：' + (e.message || String(e)), 'error');
+  }
 }
 
 /**
@@ -581,6 +651,41 @@ document.getElementById('createModal').addEventListener('click', (e) => {
     closeCreateModal();
   }
 });
+
+/**
+ * Toast 通知
+ */
+function showToast(message, type) {
+  // type: 'success' | 'error' | 'info'
+  var container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+    document.body.appendChild(container);
+  }
+
+  var toast = document.createElement('div');
+  var bgColor = type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#6B7280';
+  toast.style.cssText = 'background:' + bgColor + ';color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;max-width:360px;word-break:break-word;box-shadow:0 4px 12px rgba(0,0,0,0.3);opacity:0;transform:translateX(20px);transition:all 0.3s ease;pointer-events:auto;';
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // 入场动画
+  requestAnimationFrame(function() {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(0)';
+  });
+
+  // 自动消失
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(20px)';
+    setTimeout(function() {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 300);
+  }, type === 'error' ? 5000 : 3000);
+}
 
 // 启动应用
 document.addEventListener('DOMContentLoaded', initApp);
