@@ -1,7 +1,8 @@
 /* ============================================
    fredd 的个人任务系统 - 电纸书版样式
    对标 Kindle / 墨水屏阅读器设计语言
-   ─ 单列列表 · 大留白 · 高对比 · 零动画
+   ─ 单列列表 · 大字体 · 大触控 · 高对比
+   ─ 适配墨案W7（6寸 1404×1872 高DPI 墨水屏）
    ============================================ */
 
 * {
@@ -13,43 +14,43 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 body {
-  font-family: 'Noto Serif CJK SC', 'Source Han Serif CN', 'PingFang SC', 'Microsoft YaHei', serif;
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
   background: #fff;
-  color: #111;
-  line-height: 1.6;
+  color: #000;
+  line-height: 1.5;
   -webkit-font-smoothing: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  padding-bottom: 48px; /* 为底部状态栏留空 */
+  padding-bottom: 56px;
 }
 
 /* ===== 顶部区域 ===== */
 .header {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid #ddd;
+  padding: 24px 24px 20px;
+  border-bottom: 2px solid #ccc;
 }
 
 .header-top {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .header-title {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
 
 .header-time {
-  font-size: 13px;
-  color: #666;
+  font-size: 18px;
+  color: #555;
   font-weight: 400;
 }
 
@@ -63,38 +64,38 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1.5px solid #333;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: 600;
+  border: 2px solid #333;
   background: #fff;
   color: #333;
   cursor: pointer;
-  min-height: 40px;
+  min-height: 48px;
   letter-spacing: 0.5px;
 }
 
 .nav-btn:first-child {
-  border-radius: 4px 0 0 4px;
+  border-radius: 6px 0 0 6px;
   border-right: none;
 }
 
 .nav-btn:nth-child(2) {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 6px 6px 0;
 }
 
 .nav-btn.active {
-  background: #111;
+  background: #000;
   color: #fff;
-  border-color: #111;
+  border-color: #000;
 }
 
 .nav-btn-icon {
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 18px;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 22px;
   margin-left: auto;
-  border: 1.5px solid #333;
+  border: 2px solid #333;
 }
 
 /* ===== 日期信息栏 ===== */
@@ -102,20 +103,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 14px 24px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
 }
 
 .datetime-bar .date {
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 500;
-  color: #444;
+  color: #333;
 }
 
 .datetime-bar .count {
-  font-size: 13px;
-  color: #666;
+  font-size: 17px;
+  color: #555;
 }
 
 /* ===== 任务列表（单列） ===== */
@@ -129,12 +130,12 @@ body {
 .task-item {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e8e8e8;
-  min-height: 60px;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #ddd;
+  min-height: 80px;
   cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.06);
 }
 
 .task-item:active {
@@ -142,42 +143,42 @@ body {
 }
 
 .task-item.completed {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
-/* 复选框 */
+/* 复选框 - 大尺寸适配触控 */
 .task-checkbox {
-  width: 22px;
-  height: 22px;
-  border: 2px solid #333;
-  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  border: 2.5px solid #222;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-top: 2px;
-  /* 扩大触控热区 */
   position: relative;
 }
 
+/* 扩大触控热区到 54x54 */
 .task-checkbox::before {
   content: '';
   position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
 }
 
 .task-checkbox.checked {
-  background: #111;
-  border-color: #111;
+  background: #000;
+  border-color: #000;
 }
 
 .task-checkbox.checked::after {
   content: '✓';
   color: #fff;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -188,88 +189,88 @@ body {
 }
 
 .task-title {
-  font-size: 16px;
+  font-size: 21px;
   font-weight: 500;
   line-height: 1.4;
-  color: #111;
+  color: #000;
   word-break: break-word;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .task-item.completed .task-title {
   text-decoration: line-through;
-  color: #888;
+  color: #777;
 }
 
 /* 任务元信息行 */
 .task-meta {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .task-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  color: #555;
+  gap: 4px;
+  font-size: 16px;
+  color: #444;
   line-height: 1;
 }
 
 .task-badge-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #999;
   flex-shrink: 0;
 }
 
-.task-badge-dot.urgent { background: #111; }
+.task-badge-dot.urgent { background: #000; }
 .task-badge-dot.high { background: #444; }
 .task-badge-dot.medium { background: #888; }
 .task-badge-dot.low { background: #ccc; }
 
 .task-due {
-  font-size: 12px;
-  color: #666;
+  font-size: 16px;
+  color: #555;
 }
 
 .task-due.overdue {
-  color: #111;
-  font-weight: 600;
+  color: #000;
+  font-weight: 700;
 }
 
 /* 优先级侧边指示条 */
 .task-priority-bar {
-  width: 3px;
+  width: 4px;
   align-self: stretch;
   border-radius: 2px;
   flex-shrink: 0;
   background: transparent;
 }
 
-.task-priority-bar.urgent { background: #111; }
-.task-priority-bar.high { background: #555; }
-.task-priority-bar.medium { background: #aaa; }
+.task-priority-bar.urgent { background: #000; }
+.task-priority-bar.high { background: #444; }
+.task-priority-bar.medium { background: #999; }
 .task-priority-bar.low { background: #ddd; }
 
 /* ===== 空状态 ===== */
 .empty-state {
   text-align: center;
-  padding: 80px 20px;
+  padding: 100px 24px;
 }
 
 .empty-state .icon {
-  font-size: 36px;
-  margin-bottom: 12px;
-  color: #ccc;
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #bbb;
 }
 
 .empty-state p {
-  font-size: 15px;
-  color: #888;
+  font-size: 20px;
+  color: #777;
 }
 
 /* ===== 隐藏类 ===== */
@@ -283,11 +284,11 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  border-top: 1px solid #ddd;
-  padding: 10px 20px;
-  font-size: 11px;
-  color: #888;
-  background: #fafafa;
+  border-top: 1px solid #ccc;
+  padding: 12px 24px;
+  font-size: 14px;
+  color: #777;
+  background: #f8f8f8;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -296,11 +297,11 @@ body {
 
 .status-dot {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #ccc;
-  margin-right: 5px;
+  margin-right: 6px;
   vertical-align: middle;
 }
 
@@ -311,39 +312,18 @@ body {
 /* ===== 加载状态 ===== */
 .loading {
   text-align: center;
-  padding: 60px 20px;
-  font-size: 15px;
-  color: #888;
+  padding: 80px 24px;
+  font-size: 20px;
+  color: #777;
 }
 
 /* ===== 分组标题 ===== */
 .task-section-header {
-  padding: 10px 20px 6px;
-  font-size: 12px;
+  padding: 14px 24px 10px;
+  font-size: 15px;
   font-weight: 600;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #e8e8e8;
-  background: #fafafa;
-}
-
-/* ===== 响应式：小屏微调 ===== */
-@media (max-width: 400px) {
-  .header {
-    padding: 16px 14px 12px;
-  }
-
-  .task-item {
-    padding: 14px;
-    gap: 12px;
-  }
-
-  .task-title {
-    font-size: 15px;
-  }
-
-  .datetime-bar {
-    padding: 10px 14px;
-  }
+  color: #777;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
 }
