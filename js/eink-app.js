@@ -91,27 +91,14 @@ function renderList() {
   grid.classList.remove('hidden');
   emptyState.classList.add('hidden');
 
-  // 排序：未完成在前，按优先级排序
-  var sorted = einkState.todos.slice().sort(function(a, b) {
-    if (a.status !== b.status) {
-      return a.status === 'active' ? -1 : 1;
-    }
-    var priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
-    var pA = priorityOrder[a.priority] !== undefined ? priorityOrder[a.priority] : 4;
-    var pB = priorityOrder[b.priority] !== undefined ? priorityOrder[b.priority] : 4;
-    var pDiff = pA - pB;
-    if (pDiff !== 0) return pDiff;
-    return (a.sort_order || 0) - (b.sort_order || 0);
-  });
-
-  // 分组渲染：活跃任务 & 已完成
+  // 分组渲染：保持API返回的原始排序（sort_order ASC, created_at DESC），与PC版一致
   var activeItems = [];
   var completedItems = [];
-  for (var i = 0; i < sorted.length; i++) {
-    if (sorted[i].status === 'completed') {
-      completedItems.push(sorted[i]);
+  for (var i = 0; i < einkState.todos.length; i++) {
+    if (einkState.todos[i].status === 'completed') {
+      completedItems.push(einkState.todos[i]);
     } else {
-      activeItems.push(sorted[i]);
+      activeItems.push(einkState.todos[i]);
     }
   }
 

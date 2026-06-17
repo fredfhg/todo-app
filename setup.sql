@@ -14,7 +14,7 @@ CREATE TABLE todos (
   priority TEXT NOT NULL DEFAULT 'medium' 
     CHECK (priority IN ('urgent', 'high', 'medium', 'low')),
   category TEXT NOT NULL DEFAULT 'work'
-    CHECK (category IN ('work', 'dev', 'team', 'finance', 'ops', 'design', 'other')),
+    CHECK (category IN ('family', 'work', 'personal', 'other')),
   due_date TIMESTAMPTZ,
   status TEXT NOT NULL DEFAULT 'active'
     CHECK (status IN ('active', 'completed')),
