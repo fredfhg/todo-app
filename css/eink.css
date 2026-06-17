@@ -29,6 +29,28 @@ body {
   padding-bottom: 60px;
 }
 
+/* ===== 强制横屏：逆时针旋转90度 ===== */
+/* 墨案W7 物理竖屏 1404×1872，浏览器无法自动横屏 */
+/* 通过旋转整个页面容器实现横屏效果 */
+@media screen and (orientation: portrait) {
+  html {
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+  }
+  body {
+    width: 100vh;
+    height: 100vw;
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
 /* ===== 顶部区域 ===== */
 .header {
   padding: 28px 28px 22px;
@@ -295,11 +317,11 @@ body {
 }
 
 /* ===== 底部状态栏 ===== */
+/* 旋转后 fixed 失效，改为 sticky */
 .status-bar {
-  position: fixed;
+  position: -webkit-sticky;
+  position: sticky;
   bottom: 0;
-  left: 0;
-  right: 0;
   border-top: 1px solid #bbb;
   padding: 14px 28px;
   font-size: 16px;
