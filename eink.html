@@ -8,42 +8,44 @@
 </head>
 <body>
   <div class="page-wrapper">
-  <!-- 顶部导航 -->
-  <header class="header">
-    <div class="header-top">
-      <span class="header-title">我的任务</span>
-      <span class="header-time" id="headerTime"></span>
+    <!-- 可滚动内容区 -->
+    <div class="page-scroll">
+      <!-- 顶部导航 -->
+      <header class="header">
+        <div class="header-top">
+          <span class="header-title">我的任务</span>
+          <span class="header-time" id="headerTime"></span>
+        </div>
+        <nav class="header-nav">
+          <button class="nav-btn active" id="btnTasks" onclick="switchView('tasks')">待办</button>
+          <button class="nav-btn" id="btnArchived" onclick="switchView('archived')">归档</button>
+          <button class="nav-btn nav-btn-icon" onclick="refreshData()" title="刷新">↻</button>
+        </nav>
+      </header>
+
+      <!-- 日期信息栏 -->
+      <div class="datetime-bar">
+        <span class="date" id="currentDate"></span>
+        <span class="count" id="todoCount"></span>
+      </div>
+
+      <!-- 任务列表 -->
+      <div class="task-grid" id="taskGrid">
+        <div class="loading">加载中...</div>
+      </div>
+
+      <!-- 空状态 -->
+      <div class="empty-state hidden" id="emptyState">
+        <div class="icon">☐</div>
+        <p>暂无任务</p>
+      </div>
+    </div><!-- /.page-scroll -->
+
+    <!-- 底部状态栏（始终贴底） -->
+    <div class="status-bar">
+      <span><span class="status-dot" id="statusDot"></span><span id="statusText">连接中...</span></span>
+      <span id="lastSync"></span>
     </div>
-    <nav class="header-nav">
-      <button class="nav-btn active" id="btnTasks" onclick="switchView('tasks')">待办</button>
-      <button class="nav-btn" id="btnArchived" onclick="switchView('archived')">归档</button>
-      <button class="nav-btn nav-btn-icon" onclick="refreshData()" title="刷新">↻</button>
-    </nav>
-  </header>
-
-  <!-- 日期信息栏 -->
-  <div class="datetime-bar">
-    <span class="date" id="currentDate"></span>
-    <span class="count" id="todoCount"></span>
-  </div>
-
-  <!-- 任务列表 -->
-  <div class="task-grid" id="taskGrid">
-    <div class="loading">加载中...</div>
-  </div>
-
-  <!-- 空状态 -->
-  <div class="empty-state hidden" id="emptyState">
-    <div class="icon">☐</div>
-    <p>暂无任务</p>
-  </div>
-
-  </div><!-- /.page-content -->
-  <!-- 底部状态栏 -->
-  <div class="status-bar">
-    <span><span class="status-dot" id="statusDot"></span><span id="statusText">连接中...</span></span>
-    <span id="lastSync"></span>
-  </div>
   </div><!-- /.page-wrapper -->
 
   <!-- Scripts -->
