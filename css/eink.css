@@ -1,7 +1,7 @@
 /* ============================================
    fredd 的个人任务系统 - 电纸书版样式
    对标 Kindle / 墨水屏阅读器设计语言
-   ─ 单列列表 · 大字体 · 大触控 · 高对比
+   ─ 单列列表 · 大字体加粗 · 大间距 · 高对比
    ─ 适配墨案W7（6寸 1404×1872 高DPI 墨水屏）
    ============================================ */
 
@@ -14,7 +14,7 @@
 }
 
 html {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 body {
@@ -26,32 +26,32 @@ body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  padding-bottom: 56px;
+  padding-bottom: 60px;
 }
 
 /* ===== 顶部区域 ===== */
 .header {
-  padding: 24px 24px 20px;
-  border-bottom: 2px solid #ccc;
+  padding: 28px 28px 22px;
+  border-bottom: 2px solid #bbb;
 }
 
 .header-top {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .header-title {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 900;
   letter-spacing: 0.5px;
 }
 
 .header-time {
-  font-size: 18px;
-  color: #555;
-  font-weight: 400;
+  font-size: 20px;
+  color: #444;
+  font-weight: 500;
 }
 
 .header-nav {
@@ -64,14 +64,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 28px;
-  font-size: 18px;
-  font-weight: 600;
-  border: 2px solid #333;
+  padding: 14px 32px;
+  font-size: 20px;
+  font-weight: 700;
+  border: 2.5px solid #222;
   background: #fff;
-  color: #333;
+  color: #222;
   cursor: pointer;
-  min-height: 48px;
+  min-height: 52px;
   letter-spacing: 0.5px;
 }
 
@@ -92,10 +92,10 @@ body {
 
 .nav-btn-icon {
   border-radius: 6px;
-  padding: 12px 16px;
-  font-size: 22px;
+  padding: 14px 18px;
+  font-size: 24px;
   margin-left: auto;
-  border: 2px solid #333;
+  border: 2.5px solid #222;
 }
 
 /* ===== 日期信息栏 ===== */
@@ -103,20 +103,21 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 24px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
+  padding: 16px 28px;
+  background: #f3f3f3;
+  border-bottom: 1px solid #ccc;
 }
 
 .datetime-bar .date {
-  font-size: 17px;
-  font-weight: 500;
-  color: #333;
+  font-size: 19px;
+  font-weight: 600;
+  color: #222;
 }
 
 .datetime-bar .count {
-  font-size: 17px;
-  color: #555;
+  font-size: 19px;
+  font-weight: 500;
+  color: #444;
 }
 
 /* ===== 任务列表（单列） ===== */
@@ -130,44 +131,44 @@ body {
 .task-item {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 22px 24px;
-  border-bottom: 1px solid #ddd;
-  min-height: 80px;
+  gap: 18px;
+  padding: 28px 28px;
+  border-bottom: 1px solid #ccc;
+  min-height: 100px;
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.06);
 }
 
 .task-item:active {
-  background: #f0f0f0;
+  background: #eee;
 }
 
 .task-item.completed {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 /* 复选框 - 大尺寸适配触控 */
 .task-checkbox {
-  width: 30px;
-  height: 30px;
-  border: 2.5px solid #222;
-  border-radius: 4px;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #111;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 3px;
   position: relative;
 }
 
-/* 扩大触控热区到 54x54 */
+/* 扩大触控热区到 60x60 */
 .task-checkbox::before {
   content: '';
   position: absolute;
-  top: -12px;
-  left: -12px;
-  right: -12px;
-  bottom: -12px;
+  top: -13px;
+  left: -13px;
+  right: -13px;
+  bottom: -13px;
 }
 
 .task-checkbox.checked {
@@ -178,8 +179,8 @@ body {
 .task-checkbox.checked::after {
   content: '✓';
   color: #fff;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 900;
 }
 
 /* 任务内容区 */
@@ -189,12 +190,12 @@ body {
 }
 
 .task-title {
-  font-size: 21px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 1.4;
   color: #000;
   word-break: break-word;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .task-item.completed .task-title {
@@ -206,22 +207,24 @@ body {
 .task-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .task-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 16px;
-  color: #444;
+  gap: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
   line-height: 1;
 }
 
 .task-badge-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #999;
   flex-shrink: 0;
@@ -233,20 +236,21 @@ body {
 .task-badge-dot.low { background: #ccc; }
 
 .task-due {
-  font-size: 16px;
-  color: #555;
+  font-size: 18px;
+  font-weight: 500;
+  color: #444;
 }
 
 .task-due.overdue {
   color: #000;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* 优先级侧边指示条 */
 .task-priority-bar {
-  width: 4px;
+  width: 5px;
   align-self: stretch;
-  border-radius: 2px;
+  border-radius: 3px;
   flex-shrink: 0;
   background: transparent;
 }
@@ -259,17 +263,18 @@ body {
 /* ===== 空状态 ===== */
 .empty-state {
   text-align: center;
-  padding: 100px 24px;
+  padding: 120px 28px;
 }
 
 .empty-state .icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 56px;
+  margin-bottom: 20px;
   color: #bbb;
 }
 
 .empty-state p {
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 500;
   color: #777;
 }
 
@@ -284,11 +289,11 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  border-top: 1px solid #ccc;
-  padding: 12px 24px;
-  font-size: 14px;
-  color: #777;
-  background: #f8f8f8;
+  border-top: 1px solid #bbb;
+  padding: 14px 28px;
+  font-size: 16px;
+  color: #666;
+  background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -297,8 +302,8 @@ body {
 
 .status-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #ccc;
   margin-right: 6px;
@@ -312,18 +317,19 @@ body {
 /* ===== 加载状态 ===== */
 .loading {
   text-align: center;
-  padding: 80px 24px;
-  font-size: 20px;
-  color: #777;
+  padding: 100px 28px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #666;
 }
 
 /* ===== 分组标题 ===== */
 .task-section-header {
-  padding: 14px 24px 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #777;
+  padding: 16px 28px 12px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #666;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid #ddd;
-  background: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+  background: #f3f3f3;
 }
