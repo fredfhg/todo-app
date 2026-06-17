@@ -65,34 +65,48 @@ async function loadTodos() {
 }
 
 /**
- * 设置实时同步
+ * 设置实时同步（WebSocket 不可用时自动回退轮询）
  */
+let desktopPollingTimer = null;
 function setupRealtime() {
-  TodoDB.subscribe(
-    // onInsert
-    (newTodo) => {
-      handleRealtimeChange();
-    },
-    // onUpdate
-    (updatedTodo) => {
-      handleRealtimeChange();
-      // 如果正在编辑该任务，更新面板
-      if (state.selectedTodoId === updatedTodo.id) {
-        const todo = state.todos.find(t => t.id === updatedTodo.id);
-        if (todo) {
-          Object.assign(todo, updatedTodo);
-          populateDetailPanel(updatedTodo);
+  try {
+    TodoDB.subscribe(
+      // onInsert
+      (newTodo) => {
+        handleRealtimeChange();
+      },
+      // onUpdate
+      (updatedTodo) => {
+        handleRealtimeChange();
+        // 如果正在编辑该任务，更新面板
+        if (state.selectedTodoId === updatedTodo.id) {
+          const todo = state.todos.find(t => t.id === updatedTodo.id);
+          if (todo) {
+            Object.assign(todo, updatedTodo);
+            populateDetailPanel(updatedTodo);
+          }
+        }
+      },
+      // onDelete
+      (deletedTodo) => {
+        handleRealtimeChange();
+        if (state.selectedTodoId === deletedTodo.id) {
+          closeDetailPanel();
         }
       }
-    },
-    // onDelete
-    (deletedTodo) => {
-      handleRealtimeChange();
-      if (state.selectedTodoId === deletedTodo.id) {
-        closeDetailPanel();
+    );
+    // 兜底轮询：Pages Functions 不支持 WebSocket，5秒后启动轮询
+    setTimeout(() => {
+      if (!desktopPollingTimer) {
+        desktopPollingTimer = setInterval(() => loadTodos(), 15000);
       }
+    }, 5000);
+  } catch (e) {
+    console.warn('Realtime 不可用，回退轮询', e);
+    if (!desktopPollingTimer) {
+      desktopPollingTimer = setInterval(() => loadTodos(), 15000);
     }
-  );
+  }
 }
 
 function handleRealtimeChange() {

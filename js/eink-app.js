@@ -215,6 +215,14 @@ function setupRealtime() {
         }
       }
     );
+    // 兜底：如果 WebSocket 连接不上（Pages Functions 不支持 WS），
+    // 5秒后无论如何也启动轮询作为保底
+    setTimeout(() => {
+      if (!pollingTimer) {
+        console.info('启动保底轮询（5秒超时）');
+        startPolling();
+      }
+    }, 5000);
   } catch (e) {
     console.warn('Realtime 订阅失败，启动轮询模式', e);
     startPolling();
