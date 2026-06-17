@@ -159,7 +159,6 @@ function renderItem(todo) {
   }
 
   return '<div class="' + itemClass + '" data-id="' + todo.id + '">' +
-    '<div class="task-priority-bar ' + (todo.priority || '') + '"></div>' +
     '<div class="' + checkClass + '" onclick="toggleStatus(\'' + todo.id + '\', \'' + todo.status + '\')"></div>' +
     '<div class="task-content">' +
       '<div class="task-title">' + escapeHtml(todo.title) + '</div>' +

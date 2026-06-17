@@ -131,7 +131,7 @@ body {
 .task-item {
   display: flex;
   align-items: flex-start;
-  gap: 18px;
+  gap: 0;
   padding: 28px 28px;
   border-bottom: 1px solid #ccc;
   min-height: 100px;
@@ -158,6 +158,8 @@ body {
   justify-content: center;
   flex-shrink: 0;
   margin-top: 3px;
+  margin-left: 4px;
+  margin-right: 10px;
   position: relative;
 }
 
@@ -246,19 +248,6 @@ body {
   font-weight: 800;
 }
 
-/* 优先级侧边指示条 */
-.task-priority-bar {
-  width: 5px;
-  align-self: stretch;
-  border-radius: 3px;
-  flex-shrink: 0;
-  background: transparent;
-}
-
-.task-priority-bar.urgent { background: #000; }
-.task-priority-bar.high { background: #444; }
-.task-priority-bar.medium { background: #999; }
-.task-priority-bar.low { background: #ddd; }
 
 /* ===== 空状态 ===== */
 .empty-state {
