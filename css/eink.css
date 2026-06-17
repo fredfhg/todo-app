@@ -1,7 +1,7 @@
 /* ============================================
    fredd 的个人任务系统 - 电纸书版样式
    对标 Kindle / 墨水屏阅读器设计语言
-   ─ 单列列表 · 大字体加粗 · 大间距 · 高对比
+   ─ 单列列表 · 左标题右元信息 · 大字体加粗 · 宽松间距
    ─ 适配墨案W7（6寸 1404×1872 高DPI 墨水屏）
    ============================================ */
 
@@ -127,14 +127,13 @@ body {
   padding: 0;
 }
 
-/* ===== 任务项 ===== */
+/* ===== 任务项 - 左右两栏式布局 ===== */
 .task-item {
   display: flex;
-  align-items: flex-start;
-  gap: 0;
-  padding: 28px 28px;
+  align-items: center;
+  padding: 30px 28px;
   border-bottom: 1px solid #ccc;
-  min-height: 100px;
+  min-height: 110px;
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.06);
 }
@@ -149,28 +148,26 @@ body {
 
 /* 复选框 - 大尺寸适配触控 */
 .task-checkbox {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: 3px solid #111;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 3px;
-  margin-left: 4px;
-  margin-right: 10px;
+  margin-right: 20px;
   position: relative;
 }
 
-/* 扩大触控热区到 60x60 */
+/* 扩大触控热区到 64x64 */
 .task-checkbox::before {
   content: '';
   position: absolute;
-  top: -13px;
-  left: -13px;
-  right: -13px;
-  bottom: -13px;
+  top: -14px;
+  left: -14px;
+  right: -14px;
+  bottom: -14px;
 }
 
 .task-checkbox.checked {
@@ -181,23 +178,23 @@ body {
 .task-checkbox.checked::after {
   content: '✓';
   color: #fff;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 900;
 }
 
-/* 任务内容区 */
+/* 任务内容区（左侧主体） */
 .task-content {
   flex: 1;
   min-width: 0;
+  margin-right: 20px;
 }
 
 .task-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.45;
   color: #000;
   word-break: break-word;
-  margin-bottom: 12px;
 }
 
 .task-item.completed .task-title {
@@ -205,49 +202,74 @@ body {
   color: #777;
 }
 
-/* 任务元信息行 */
-.task-meta {
+/* ===== 右侧元信息区 ===== */
+.task-aside {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 100px;
 }
 
-.task-badge {
+/* 优先级标签 */
+.task-priority-tag {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
+  color: #111;
+  padding: 4px 10px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.task-priority-tag.urgent {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.task-priority-tag.high {
+  background: #444;
+  color: #fff;
+  border-color: #444;
+}
+
+.task-priority-tag.medium {
+  background: #eee;
   color: #333;
-  line-height: 1;
+  border-color: #999;
 }
 
-.task-badge-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #999;
-  flex-shrink: 0;
+.task-priority-tag.low {
+  background: #fff;
+  color: #888;
+  border-color: #ccc;
 }
 
-.task-badge-dot.urgent { background: #000; }
-.task-badge-dot.high { background: #444; }
-.task-badge-dot.medium { background: #888; }
-.task-badge-dot.low { background: #ccc; }
-
-.task-due {
+/* 类别标签 */
+.task-category-tag {
   font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* 截止日期 */
+.task-due {
+  font-size: 17px;
   font-weight: 500;
-  color: #444;
+  color: #555;
+  white-space: nowrap;
 }
 
 .task-due.overdue {
   color: #000;
   font-weight: 800;
 }
-
 
 /* ===== 空状态 ===== */
 .empty-state {
@@ -314,8 +336,8 @@ body {
 
 /* ===== 分组标题 ===== */
 .task-section-header {
-  padding: 16px 28px 12px;
-  font-size: 17px;
+  padding: 18px 28px 14px;
+  font-size: 18px;
   font-weight: 700;
   color: #666;
   letter-spacing: 0.5px;

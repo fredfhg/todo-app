@@ -138,6 +138,7 @@ function renderList() {
 
 /**
  * 渲染单个列表项
+ * 布局：[复选框] [标题] ──── [优先级 / 类别 / 截止日期]
  */
 function renderItem(todo) {
   var isCompleted = todo.status === 'completed';
@@ -149,21 +150,22 @@ function renderItem(todo) {
   var itemClass = 'task-item' + (isCompleted ? ' completed' : '');
   var checkClass = 'task-checkbox' + (isCompleted ? ' checked' : '');
   var dueClass = 'task-due' + (isOverdue ? ' overdue' : '');
+  var priorityClass = 'task-priority-tag ' + (todo.priority || 'medium');
 
-  // 构建元信息
-  var metaHtml = '';
-  metaHtml += '<span class="task-badge"><span class="task-badge-dot ' + (todo.priority || '') + '"></span>' + (priorityConf.label || '普通') + '</span>';
-  metaHtml += '<span class="task-badge">' + (categoryConf.emoji || '') + ' ' + (categoryConf.label || '') + '</span>';
+  // 右侧元信息区
+  var asideHtml = '';
+  asideHtml += '<span class="' + priorityClass + '">' + (priorityConf.label || '普通') + '</span>';
+  asideHtml += '<span class="task-category-tag">' + (categoryConf.emoji || '') + ' ' + (categoryConf.label || '') + '</span>';
   if (dueText) {
-    metaHtml += '<span class="' + dueClass + '">' + (isOverdue ? '⚠ ' : '') + dueText + '</span>';
+    asideHtml += '<span class="' + dueClass + '">' + (isOverdue ? '⚠ ' : '') + dueText + '</span>';
   }
 
   return '<div class="' + itemClass + '" data-id="' + todo.id + '">' +
     '<div class="' + checkClass + '" onclick="toggleStatus(\'' + todo.id + '\', \'' + todo.status + '\')"></div>' +
     '<div class="task-content">' +
       '<div class="task-title">' + escapeHtml(todo.title) + '</div>' +
-      '<div class="task-meta">' + metaHtml + '</div>' +
     '</div>' +
+    '<div class="task-aside">' + asideHtml + '</div>' +
   '</div>';
 }
 
