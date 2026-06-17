@@ -18,9 +18,39 @@ async function initEinkApp() {
   updateDateTime();
   setInterval(updateDateTime, 60000); // 每分钟更新时间
 
-  await loadData();
-  setupRealtime();
-  updateConnectionStatus(true);
+  try {
+    await loadData();
+    updateConnectionStatus(true);
+    // 尝试设置实时同步，失败则回退轮询
+    try {
+      setupRealtime();
+    } catch (e) {
+      console.warn('Realtime 不可用，回退为定时轮询', e);
+      startPolling();
+    }
+  } catch (e) {
+    console.error('初始化加载失败:', e);
+    updateConnectionStatus(false);
+    document.getElementById('taskGrid').innerHTML =
+      '<div class="loading">连接失败，请点击右上角刷新按钮重试</div>';
+  }
+}
+
+/**
+ * 轮询模式（当 WebSocket 不可用时的备选方案）
+ * 每 30 秒自动拉取一次数据
+ */
+let pollingTimer = null;
+function startPolling() {
+  if (pollingTimer) return;
+  pollingTimer = setInterval(async () => {
+    try {
+      await loadData();
+      updateConnectionStatus(true);
+    } catch (e) {
+      updateConnectionStatus(false);
+    }
+  }, 30000); // 30秒轮询一次
 }
 
 /**
@@ -161,28 +191,34 @@ async function refreshData() {
 
 /**
  * 设置实时同步
+ * 如果 WebSocket 连接失败，会自动回退到轮询
  */
 function setupRealtime() {
-  TodoDB.subscribe(
-    // onInsert - 新任务
-    () => {
-      if (!einkState.isLoading) {
-        loadData();
+  try {
+    TodoDB.subscribe(
+      // onInsert - 新任务
+      () => {
+        if (!einkState.isLoading) {
+          loadData();
+        }
+      },
+      // onUpdate - 任务更新
+      () => {
+        if (!einkState.isLoading) {
+          loadData();
+        }
+      },
+      // onDelete - 任务删除
+      () => {
+        if (!einkState.isLoading) {
+          loadData();
+        }
       }
-    },
-    // onUpdate - 任务更新
-    () => {
-      if (!einkState.isLoading) {
-        loadData();
-      }
-    },
-    // onDelete - 任务删除
-    () => {
-      if (!einkState.isLoading) {
-        loadData();
-      }
-    }
-  );
+    );
+  } catch (e) {
+    console.warn('Realtime 订阅失败，启动轮询模式', e);
+    startPolling();
+  }
 }
 
 /**

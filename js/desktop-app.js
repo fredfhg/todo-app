@@ -20,8 +20,14 @@ const dom = {};
  */
 async function initApp() {
   cacheDom();
-  await loadTodos();
-  setupRealtime();
+  try {
+    await loadTodos();
+    updateConnection(true);
+    setupRealtime();
+  } catch (e) {
+    console.error('初始化加载失败:', e);
+    updateConnection(false);
+  }
 }
 
 function cacheDom() {
