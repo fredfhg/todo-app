@@ -43,17 +43,8 @@
     <span id="lastSync"></span>
   </div>
 
-  <!-- Scripts -->
-  <script src="js/supabase.min.js"></script>
-  <script>
-    // 诊断：如果 SDK 加载失败，显示错误
-    if (!window.supabase) {
-      document.getElementById('taskGrid').innerHTML =
-        '<div class="loading" style="color:red">错误：Supabase SDK 加载失败，请刷新重试</div>';
-    }
-  </script>
-  <script src="js/config.js"></script>
-  <script src="js/db.js"></script>
+  <!-- Scripts（电纸书专用轻量版，不依赖 Supabase SDK，兼容 Android 8.1） -->
+  <script src="js/eink-db.js"></script>
   <script src="js/eink-app.js"></script>
 </body>
 </html>
