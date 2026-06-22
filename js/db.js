@@ -181,6 +181,23 @@ const TodoDB = {
   },
 
   /**
+   * 自动归档：已完成且超过3天未变更的事项
+   * 前端兜底，确保 pg_cron 未配置时也能归档
+   */
+  async autoArchiveCompleted() {
+    const threshold = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    const { error } = await supabaseClient
+      .from('todos')
+      .update({ is_archived: true })
+      .eq('status', 'completed')
+      .eq('is_archived', false)
+      .lt('completed_at', threshold);
+    if (error) {
+      console.error('自动归档失败:', error);
+    }
+  },
+
+  /**
    * 订阅实时变更
    * @param {Function} onInsert - 新增回调
    * @param {Function} onUpdate - 更新回调
@@ -230,13 +247,16 @@ const TodoUtils = {
    * @returns {Object} { high: [...], later: [...] }
    */
   groupByPriority(todos) {
+    // 排序：未完成在前 → sort_order → 截止日期
+    const statusOrder = (t) => t.status === 'active' ? 0 : 1;
+
     const high = todos
       .filter(t => t.priority === 'urgent' || t.priority === 'high')
-      .sort((a, b) => a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
+      .sort((a, b) => statusOrder(a) - statusOrder(b) || a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
 
     const later = todos
       .filter(t => t.priority === 'medium' || t.priority === 'low')
-      .sort((a, b) => a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
+      .sort((a, b) => statusOrder(a) - statusOrder(b) || a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
 
     return { high, later };
   },

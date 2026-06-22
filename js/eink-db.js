@@ -98,6 +98,21 @@ var EinkDB = {
   },
 
   /**
+   * 自动归档：已完成且超过3天未变更的事项
+   * 前端兜底，确保 pg_cron 未配置时也能归档
+   */
+  autoArchiveCompleted: function() {
+    var threshold = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    var path = '/todos?status=eq.completed&is_archived=eq.false&completed_at=lt.' + threshold;
+    return apiRequest(path, {
+      method: 'PATCH',
+      body: { is_archived: true }
+    }).catch(function(err) {
+      console.error('自动归档失败:', err);
+    });
+  },
+
+  /**
    * 切换任务状态
    */
   toggleStatus: function(id, currentStatus) {

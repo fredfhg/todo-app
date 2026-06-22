@@ -23,7 +23,9 @@ function initEinkApp() {
   updateDateTime();
   setInterval(updateDateTime, 60000);
 
-  loadData().then(function() {
+  EinkDB.autoArchiveCompleted().then(function() {
+    return loadData();
+  }).then(function() {
     updateConnectionStatus(true);
     startPolling();
   }).catch(function(e) {

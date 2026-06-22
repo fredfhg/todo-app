@@ -33,6 +33,7 @@ function updateConnection(connected) {
 async function initApp() {
   cacheDom();
   try {
+    await TodoDB.autoArchiveCompleted();
     await loadTodos();
     updateConnection(true);
     setupRealtime();

@@ -19,6 +19,7 @@ CREATE TABLE todos (
   status TEXT NOT NULL DEFAULT 'active'
     CHECK (status IN ('active', 'completed')),
   is_archived BOOLEAN DEFAULT false,
+  completed_at TIMESTAMPTZ,
   subtasks JSONB DEFAULT '[]'::jsonb,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -63,6 +64,45 @@ CREATE POLICY "Allow public delete" ON todos
 
 -- 开启实时推送（Realtime）
 ALTER PUBLICATION supabase_realtime ADD TABLE todos;
+
+-- ============================================
+-- 已完成事项自动归档
+-- ============================================
+
+-- 状态变更时自动维护 completed_at
+CREATE OR REPLACE FUNCTION update_completed_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.status = 'completed' AND (OLD.status != 'completed' OR OLD.status IS NULL) THEN
+    NEW.completed_at = now();
+  ELSIF NEW.status = 'active' AND OLD.status = 'completed' THEN
+    NEW.completed_at = NULL;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS todos_completed_at ON todos;
+CREATE TRIGGER todos_completed_at
+  BEFORE UPDATE ON todos
+  FOR EACH ROW EXECUTE FUNCTION update_completed_at();
+
+-- 索引优化归档查询
+CREATE INDEX IF NOT EXISTS idx_todos_completed_at ON todos(completed_at);
+
+-- pg_cron：每日凌晨3点自动归档（已完成且超过3天未变更）
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+SELECT cron.schedule(
+  'auto-archive-completed',
+  '0 3 * * *',
+  $$UPDATE todos SET is_archived = true WHERE status = 'completed' AND is_archived = false AND completed_at < now() - interval '3 days'$$
+);
+
+-- ============================================
+-- 以下为已有数据库的迁移脚本（新部署无需执行）
+-- ============================================
+-- ALTER TABLE todos ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
+-- UPDATE todos SET completed_at = updated_at WHERE status = 'completed' AND completed_at IS NULL;
 
 -- ============================================
 -- 完成！现在可以在前端通过 Supabase SDK 访问数据了
