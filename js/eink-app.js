@@ -37,7 +37,7 @@ function initEinkApp() {
 }
 
 /**
- * 轮询 - 每60秒自动拉取
+ * 轮询 - 每30分钟自动拉取
  */
 function startPolling() {
   if (pollingTimer) return;
@@ -47,7 +47,7 @@ function startPolling() {
     }).catch(function() {
       updateConnectionStatus(false);
     });
-  }, 60000);
+  }, 1800000);
 }
 
 /**
