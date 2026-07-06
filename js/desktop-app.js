@@ -752,7 +752,8 @@ function escapeHtml(text) {
 }
 
 // 键盘快捷键
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', function(e) {
+  try {
   // Escape 关闭弹窗/面板
   if (e.key === 'Escape') {
     const modal = document.getElementById('createModal');
@@ -775,6 +776,9 @@ document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.key === 'n') {
     e.preventDefault();
     openCreateModal();
+  }
+  } catch (err) {
+    // 忽略键盘监听器中的任何错误，避免阻断页面功能
   }
 });
 
