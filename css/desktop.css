@@ -275,6 +275,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-5);
   padding: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--border-subtle);
   backdrop-filter: blur(8px);
@@ -293,8 +294,9 @@ body {
 
 /* ===== 搜索栏 ===== */
 .search-bar {
-  flex: 1;
-  max-width: 420px;
+  flex: 0 1 300px;
+  min-width: 160px;
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: var(--space-2);
