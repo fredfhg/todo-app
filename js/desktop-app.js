@@ -12,6 +12,9 @@ const state = {
   editSubtasks: []
 };
 
+// DOM 元素缓存
+const dom = {};
+
 // 搜索状态
 let searchTimer = null;
 let isSearching = false;
