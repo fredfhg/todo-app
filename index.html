@@ -61,6 +61,15 @@
     <main class="main-content">
       <div class="main-header">
         <h2 id="viewTitle">任务</h2>
+        <div class="search-bar" id="searchBar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput"
+                 placeholder="搜索标题、描述、子任务..."
+                 oninput="onSearchInput(event)"
+                 autocomplete="off">
+          <button class="search-clear hidden" id="searchClear"
+                  onclick="clearSearch()" title="清除搜索">✕</button>
+        </div>
         <div class="header-actions">
           <button class="btn btn-primary" onclick="openCreateModal()">+ 新建任务</button>
         </div>
@@ -98,6 +107,20 @@
         <div class="empty-state hidden" id="emptyState">
           <div class="icon">&#128203;</div>
           <p>暂无任务，点击上方「新建任务」开始</p>
+        </div>
+
+        <!-- 搜索结果 -->
+        <div class="task-group hidden" id="searchResultsGroup">
+          <div class="task-group-header search-header">
+            <span>🔍 搜索结果</span>
+            <span class="count" id="searchResultCount">0</span>
+            <button class="search-back-btn" onclick="clearSearch()">← 返回列表</button>
+          </div>
+          <div class="task-group-list" id="searchResultsList"></div>
+          <div class="empty-state hidden" id="searchEmptyState">
+            <div class="icon">🔍</div>
+            <p id="searchEmptyText">未找到匹配的任务</p>
+          </div>
         </div>
       </div>
     </main>

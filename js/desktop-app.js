@@ -12,8 +12,10 @@ const state = {
   editSubtasks: []
 };
 
-// DOM 元素缓存
-const dom = {};
+// 搜索状态
+let searchTimer = null;
+let isSearching = false;
+let searchResults = [];
 
 /**
  * 更新连接状态显示
@@ -58,12 +60,21 @@ function cacheDom() {
   dom.viewTitle = document.getElementById('viewTitle');
   dom.connectionDot = document.getElementById('connectionDot');
   dom.connectionText = document.getElementById('connectionText');
+  dom.searchInput = document.getElementById('searchInput');
+  dom.searchClear = document.getElementById('searchClear');
+  dom.searchResultsGroup = document.getElementById('searchResultsGroup');
+  dom.searchResultsList = document.getElementById('searchResultsList');
+  dom.searchResultCount = document.getElementById('searchResultCount');
+  dom.searchEmptyState = document.getElementById('searchEmptyState');
+  dom.searchEmptyText = document.getElementById('searchEmptyText');
 }
 
 /**
  * 加载任务
  */
 async function loadTodos() {
+  // 搜索模式下不刷新，避免覆盖搜索结果
+  if (isSearching) return;
   const isArchived = state.currentView === 'archived';
   const filters = {
     archived: isArchived
@@ -174,8 +185,119 @@ function renderArchivedView() {
 }
 
 /**
- * 渲染单个任务项
+ * 搜索输入处理（300ms 防抖）
  */
+function onSearchInput(event) {
+  clearTimeout(searchTimer);
+  var keyword = event.target.value.trim();
+
+  // 显示/隐藏清除按钮
+  dom.searchClear.classList.toggle('hidden', !keyword);
+
+  if (!keyword) {
+    clearSearch();
+    return;
+  }
+
+  searchTimer = setTimeout(function() {
+    performSearch(keyword);
+  }, 300);
+}
+
+/**
+ * 执行搜索
+ */
+async function performSearch(keyword) {
+  try {
+    searchResults = await TodoDB.searchTodos(keyword);
+    isSearching = true;
+    renderSearchResults(keyword);
+  } catch (e) {
+    console.error('搜索失败:', e);
+    showToast('搜索失败：' + (e.message || String(e)), 'error');
+  }
+}
+
+/**
+ * 清除搜索，恢复常规视图
+ */
+function clearSearch() {
+  clearTimeout(searchTimer);
+  isSearching = false;
+  searchResults = [];
+
+  if (dom.searchInput) {
+    dom.searchInput.value = '';
+  }
+  if (dom.searchClear) {
+    dom.searchClear.classList.add('hidden');
+  }
+  if (dom.searchResultsGroup) {
+    dom.searchResultsGroup.classList.add('hidden');
+  }
+
+  // 恢复任务列表的正常显示
+  dom.highPriorityGroup.classList.remove('hidden');
+  dom.laterGroup.classList.remove('hidden');
+  renderTodos();
+}
+
+/**
+ * 渲染搜索结果
+ */
+function renderSearchResults(keyword) {
+  // 隐藏常规视图，显示搜索视图
+  dom.highPriorityGroup.classList.add('hidden');
+  dom.laterGroup.classList.add('hidden');
+  dom.emptyState.classList.add('hidden');
+  dom.searchResultsGroup.classList.remove('hidden');
+
+  // 更新计数
+  dom.searchResultCount.textContent = searchResults.length;
+
+  if (searchResults.length === 0) {
+    dom.searchResultsList.innerHTML = '';
+    dom.searchEmptyState.classList.remove('hidden');
+    dom.searchEmptyText.textContent = '未找到与「' + keyword + '」匹配的任务';
+    return;
+  }
+
+  dom.searchEmptyState.classList.add('hidden');
+  dom.searchResultsList.innerHTML = searchResults.map(function(t) {
+    return renderSearchResultItem(t);
+  }).join('');
+}
+
+/**
+ * 渲染单个搜索结果项（含归档标记）
+ */
+function renderSearchResultItem(todo) {
+  var isCompleted = todo.status === 'completed';
+  var isActive = state.selectedTodoId === todo.id;
+  var priorityConf = PRIORITIES[todo.priority] || {};
+  var categoryConf = CATEGORIES[todo.category] || {};
+  var dueText = TodoUtils.formatDate(todo.due_date);
+  var isOverdue = todo.due_date && new Date(todo.due_date) < new Date() && !isCompleted;
+  var archiveBadge = todo.is_archived ? '<span class="task-tag tag-archive">📦 已归档</span>' : '';
+
+  return '<div class="task-item ' + (isCompleted ? 'completed ' : '') + (isActive ? 'active' : '') + '"' +
+    ' data-id="' + todo.id + '"' +
+    ' draggable="true"' +
+    ' onclick="selectTask(\'' + todo.id + '\')">' +
+    '<span class="task-drag-handle" title="拖拽排序">&#8942;&#8942;</span>' +
+    '<div class="task-checkbox ' + (isCompleted ? 'checked' : '') + '"' +
+    ' onclick="event.stopPropagation(); toggleTodoStatus(\'' + todo.id + '\', \'' + todo.status + '\')"></div>' +
+    '<div class="task-info">' +
+    '<div class="task-title">' + escapeHtml(todo.title) + '</div>' +
+    '<div class="task-meta">' +
+    '<span class="task-tag tag-priority ' + todo.priority + '">' + (priorityConf.emoji || '') + ' ' + (priorityConf.label || '') + '</span>' +
+    '<span class="task-tag tag-category">' + (categoryConf.emoji || '') + ' ' + (categoryConf.label || '') + '</span>' +
+    (dueText ? '<span class="task-tag tag-due ' + (isOverdue ? 'overdue' : '') + '">📅 ' + dueText + '</span>' : '') +
+    archiveBadge +
+    '</div>' +
+    '</div>' +
+    '</div>';
+}
 function renderTaskItem(todo) {
   const isCompleted = todo.status === 'completed';
   const isActive = state.selectedTodoId === todo.id;
@@ -228,6 +350,7 @@ function switchView(view) {
   state.currentView = view;
   state.selectedTodoId = null;
   closeDetailPanel();
+  clearSearch();
 
   // 更新导航激活状态
   document.querySelectorAll('.nav-item[data-view]').forEach(el => {
@@ -256,6 +379,7 @@ function switchView(view) {
  */
 function filterCategory(category) {
   state.currentCategory = category;
+  clearSearch();
 
   document.querySelectorAll('.nav-item[data-category]').forEach(el => {
     el.classList.toggle('active', el.dataset.category === category);
@@ -634,9 +758,17 @@ document.addEventListener('keydown', (e) => {
     const modal = document.getElementById('createModal');
     if (!modal.classList.contains('hidden')) {
       closeCreateModal();
+    } else if (isSearching) {
+      clearSearch();
     } else if (state.selectedTodoId) {
       closeDetailPanel();
     }
+  }
+
+  // Ctrl+K / Ctrl+F 聚焦搜索
+  if ((e.ctrlKey && (e.key === 'k' || e.key === 'f')) || (!e.ctrlKey && !e.metaKey && document.activeElement !== dom.searchInput && e.key === '/')) {
+    e.preventDefault();
+    if (dom.searchInput) dom.searchInput.focus();
   }
 
   // Ctrl+N 新建

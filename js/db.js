@@ -198,6 +198,41 @@ const TodoDB = {
   },
 
   /**
+   * 搜索任务（覆盖全部字段：标题 + 描述 + 子任务，含已归档）
+   * @param {string} keyword - 搜索关键字
+   * @returns {Promise<Array>} 匹配的任务列表
+   */
+  async searchTodos(keyword) {
+    // 拉取全部任务（不过滤归档），由客户端做模糊匹配
+    const query = supabaseClient
+      .from('todos')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('搜索任务失败:', error);
+      throw new Error('搜索失败: ' + (error.message || JSON.stringify(error)));
+    }
+
+    const lower = keyword.toLowerCase();
+    return (data || []).filter(function(todo) {
+      // 标题
+      if (todo.title && todo.title.toLowerCase().indexOf(lower) !== -1) return true;
+      // 描述
+      if (todo.description && todo.description.toLowerCase().indexOf(lower) !== -1) return true;
+      // 子任务
+      if (todo.subtasks && Array.isArray(todo.subtasks)) {
+        for (var i = 0; i < todo.subtasks.length; i++) {
+          if (todo.subtasks[i].title && todo.subtasks[i].title.toLowerCase().indexOf(lower) !== -1) return true;
+        }
+      }
+      return false;
+    });
+  },
+
+  /**
    * 订阅实时变更
    * @param {Function} onInsert - 新增回调
    * @param {Function} onUpdate - 更新回调
