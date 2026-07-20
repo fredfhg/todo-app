@@ -79,6 +79,7 @@ const TodoDB = {
       priority: todo.priority || 'medium',
       category: todo.category || 'work',
       due_date: todo.due_date || null,
+      is_longterm: todo.is_longterm || false,
       status: 'active',
       is_archived: false,
       subtasks: todo.subtasks || [],
@@ -282,16 +283,24 @@ const TodoUtils = {
    * @returns {Object} { high: [...], later: [...] }
    */
   groupByPriority(todos) {
-    // 排序：未完成在前 → sort_order → 截止日期
+    // 排序：长期(未完成)置顶 → 未完成在前 → sort_order → 截止日期
     const statusOrder = (t) => t.status === 'active' ? 0 : 1;
+    // 长期且未完成的任务永远置顶
+    const longtermOrder = (t) => (t.is_longterm && t.status === 'active') ? 0 : 1;
+
+    const sortFn = (a, b) =>
+      longtermOrder(a) - longtermOrder(b) ||
+      statusOrder(a) - statusOrder(b) ||
+      a.sort_order - b.sort_order ||
+      new Date(a.due_date || '9999') - new Date(b.due_date || '9999');
 
     const high = todos
       .filter(t => t.priority === 'urgent' || t.priority === 'high')
-      .sort((a, b) => statusOrder(a) - statusOrder(b) || a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
+      .sort(sortFn);
 
     const later = todos
       .filter(t => t.priority === 'medium' || t.priority === 'low')
-      .sort((a, b) => statusOrder(a) - statusOrder(b) || a.sort_order - b.sort_order || new Date(a.due_date || '9999') - new Date(b.due_date || '9999'));
+      .sort(sortFn);
 
     return { high, later };
   },

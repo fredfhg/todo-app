@@ -282,6 +282,9 @@ function renderSearchResultItem(todo) {
   var dueText = TodoUtils.formatDate(todo.due_date);
   var isOverdue = todo.due_date && new Date(todo.due_date) < new Date() && !isCompleted;
   var archiveBadge = todo.is_archived ? '<span class="task-tag tag-archive">📦 已归档</span>' : '';
+  var timeBadge = todo.is_longterm
+    ? '<span class="task-tag tag-longterm">♾️ 长期</span>'
+    : (dueText ? '<span class="task-tag tag-due ' + (isOverdue ? 'overdue' : '') + '">📅 ' + dueText + '</span>' : '');
 
   return '<div class="task-item ' + (isCompleted ? 'completed ' : '') + (isActive ? 'active' : '') + '"' +
     ' data-id="' + todo.id + '"' +
@@ -295,7 +298,7 @@ function renderSearchResultItem(todo) {
     '<div class="task-meta">' +
     '<span class="task-tag tag-priority ' + todo.priority + '">' + (priorityConf.emoji || '') + ' ' + (priorityConf.label || '') + '</span>' +
     '<span class="task-tag tag-category">' + (categoryConf.emoji || '') + ' ' + (categoryConf.label || '') + '</span>' +
-    (dueText ? '<span class="task-tag tag-due ' + (isOverdue ? 'overdue' : '') + '">📅 ' + dueText + '</span>' : '') +
+    timeBadge +
     archiveBadge +
     '</div>' +
     '</div>' +
@@ -322,7 +325,7 @@ function renderTaskItem(todo) {
         <div class="task-meta">
           <span class="task-tag tag-priority ${todo.priority}">${priorityConf.emoji || ''} ${priorityConf.label || ''}</span>
           <span class="task-tag tag-category">${categoryConf.emoji || ''} ${categoryConf.label || ''}</span>
-          ${dueText ? `<span class="task-tag tag-due ${isOverdue ? 'overdue' : ''}">📅 ${dueText}</span>` : ''}
+          ${todo.is_longterm ? `<span class="task-tag tag-longterm">♾️ 长期</span>` : (dueText ? `<span class="task-tag tag-due ${isOverdue ? 'overdue' : ''}">📅 ${dueText}</span>` : '')}
         </div>
       </div>
     </div>
@@ -427,6 +430,10 @@ function populateDetailPanel(todo) {
     dueDateInput.value = '';
   }
 
+  // 长期任务
+  document.getElementById('editLongterm').checked = !!todo.is_longterm;
+  onLongtermToggle('edit');
+
   // 状态
   const statusDot = document.getElementById('editStatusDot');
   const statusText = document.getElementById('editStatusText');
@@ -508,12 +515,14 @@ async function saveTask() {
   const statusDot = document.getElementById('editStatusDot');
   const status = statusDot.classList.contains('active') ? 'active' : 'completed';
 
+  const isLongterm = document.getElementById('editLongterm').checked;
   const updates = {
     title: document.getElementById('editTitle').value.trim(),
     description: document.getElementById('editDesc').value.trim(),
     priority: document.getElementById('editPriority').value,
     category: document.getElementById('editCategory').value,
-    due_date: document.getElementById('editDueDate').value || null,
+    due_date: isLongterm ? null : (document.getElementById('editDueDate').value || null),
+    is_longterm: isLongterm,
     status,
     subtasks: state.editSubtasks
   };
@@ -639,6 +648,26 @@ function closeCreateModal() {
   document.getElementById('createPriority').value = 'medium';
   document.getElementById('createCategory').value = 'work';
   document.getElementById('createDueDate').value = '';
+  document.getElementById('createLongterm').checked = false;
+  onLongtermToggle('create');
+}
+
+/**
+ * 「长期」勾选联动：勾选后禁用并清空截止时间输入
+ * @param {string} scope - 'create' | 'edit'
+ */
+function onLongtermToggle(scope) {
+  const checkbox = document.getElementById(scope + 'Longterm');
+  const dueInput = document.getElementById(scope + 'DueDate');
+  if (!checkbox || !dueInput) return;
+  if (checkbox.checked) {
+    dueInput.value = '';
+    dueInput.disabled = true;
+    dueInput.style.opacity = '0.4';
+  } else {
+    dueInput.disabled = false;
+    dueInput.style.opacity = '';
+  }
 }
 
 async function createTask() {
@@ -648,12 +677,14 @@ async function createTask() {
     return;
   }
 
+  const isLongterm = document.getElementById('createLongterm').checked;
   const todo = {
     title,
     description: document.getElementById('createDesc').value.trim(),
     priority: document.getElementById('createPriority').value,
     category: document.getElementById('createCategory').value,
-    due_date: document.getElementById('createDueDate').value || null
+    due_date: isLongterm ? null : (document.getElementById('createDueDate').value || null),
+    is_longterm: isLongterm
   };
 
   try {

@@ -401,6 +401,33 @@ body {
   color: var(--info);
 }
 
+/* 长期任务标签 */
+.tag-longterm {
+  background: var(--accent-muted);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* 「长期」勾选框 */
+.longterm-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.longterm-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
 .header-actions {
   display: flex;
   gap: var(--space-2);

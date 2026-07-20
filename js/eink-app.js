@@ -93,8 +93,12 @@ function renderList() {
   grid.classList.remove('hidden');
   emptyState.classList.add('hidden');
 
-  // 排序逻辑与PC版 groupByPriority 一致：sort_order ASC, due_date ASC
+  // 排序逻辑与PC版 groupByPriority 一致：长期置顶 → sort_order ASC → due_date ASC
   function sortItems(a, b) {
+    // 长期任务永远置顶（仅活跃时；已完成组内不额外置顶）
+    var lonA = a.is_longterm ? 0 : 1;
+    var lonB = b.is_longterm ? 0 : 1;
+    if (lonA !== lonB) return lonA - lonB;
     var orderDiff = (a.sort_order || 0) - (b.sort_order || 0);
     if (orderDiff !== 0) return orderDiff;
     var dateA = a.due_date || '9999-12-31';
@@ -158,7 +162,9 @@ function renderItem(todo) {
   var asideHtml = '';
   asideHtml += '<span class="' + priorityClass + '">' + (priorityConf.label || '普通') + '</span>';
   asideHtml += '<span class="task-category-tag">' + (categoryConf.emoji || '') + ' ' + (categoryConf.label || '') + '</span>';
-  if (dueText) {
+  if (todo.is_longterm) {
+    asideHtml += '<span class="task-longterm-tag">♾️ 长期</span>';
+  } else if (dueText) {
     asideHtml += '<span class="' + dueClass + '">' + (isOverdue ? '⚠ ' : '') + dueText + '</span>';
   }
 

@@ -16,6 +16,7 @@ CREATE TABLE todos (
   category TEXT NOT NULL DEFAULT 'work'
     CHECK (category IN ('family', 'work', 'personal', 'other')),
   due_date TIMESTAMPTZ,
+  is_longterm BOOLEAN DEFAULT false,
   status TEXT NOT NULL DEFAULT 'active'
     CHECK (status IN ('active', 'completed')),
   is_archived BOOLEAN DEFAULT false,
@@ -103,6 +104,9 @@ SELECT cron.schedule(
 -- ============================================
 -- ALTER TABLE todos ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
 -- UPDATE todos SET completed_at = updated_at WHERE status = 'completed' AND completed_at IS NULL;
+
+-- 「长期」任务字段迁移（2026-07-20）
+-- ALTER TABLE todos ADD COLUMN IF NOT EXISTS is_longterm BOOLEAN DEFAULT false;
 
 -- ============================================
 -- 完成！现在可以在前端通过 Supabase SDK 访问数据了

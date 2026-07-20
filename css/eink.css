@@ -377,6 +377,14 @@ body {
   font-weight: 800;
 }
 
+/* 长期任务标签 */
+.task-longterm-tag {
+  font-size: 17px;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+}
+
 /* ===== 空状态 ===== */
 .empty-state {
   text-align: center;

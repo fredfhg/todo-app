@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/desktop.css?v=20260706b">
+  <link rel="stylesheet" href="css/desktop.css?v=20260720">
 </head>
 <body>
   <div class="app-layout" id="appLayout">
@@ -156,6 +156,10 @@
           <div class="form-group">
             <label class="form-label">截止时间</label>
             <input type="datetime-local" class="form-input" id="editDueDate">
+            <label class="longterm-check">
+              <input type="checkbox" id="editLongterm" onchange="onLongtermToggle('edit')">
+              <span>♾️ 长期任务（无截止时间，列表置顶）</span>
+            </label>
           </div>
         </div>
 
@@ -237,6 +241,10 @@
         <div class="form-group">
           <label class="form-label">截止时间</label>
           <input type="datetime-local" class="form-input" id="createDueDate">
+          <label class="longterm-check">
+            <input type="checkbox" id="createLongterm" onchange="onLongtermToggle('create')">
+            <span>♾️ 长期任务（无截止时间，列表置顶）</span>
+          </label>
         </div>
       </div>
       <div class="modal-footer">
@@ -254,8 +262,8 @@
 
   <!-- Scripts -->
   <script src="js/supabase.min.js"></script>
-  <script src="js/config.js?v=20260706b"></script>
-  <script src="js/db.js?v=20260706b"></script>
-  <script src="js/desktop-app.js?v=20260706b"></script>
+  <script src="js/config.js?v=20260720"></script>
+  <script src="js/db.js?v=20260720"></script>
+  <script src="js/desktop-app.js?v=20260720"></script>
 </body>
 </html>
